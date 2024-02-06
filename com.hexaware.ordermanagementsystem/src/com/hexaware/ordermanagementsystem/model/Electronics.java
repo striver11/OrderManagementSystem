@@ -13,10 +13,16 @@ public class Electronics extends Product {
 
    
     @Override
-	public String toString() {
-		return "Electronics [brand=" + brand + ", warrantyPeriod=" + warrantyPeriod + "]";
-	}
-
+    public String toString() {
+        return "Electronics [productId=" + getProductId() +
+               ", productName=" + getProductName() +
+               ", description=" + getDescription() +
+               ", price=" + getPrice() +
+               ", quantityInStock=" + getQuantityInStock() +
+               ", type=" + getType() +
+               ", brand=" + (brand != null ? brand : "Not available") +
+               ", warrantyPeriod=" + (warrantyPeriod > 0 ? warrantyPeriod : "Not available") + "]";
+    }
 
 	public String getBrand() {
         return brand;
