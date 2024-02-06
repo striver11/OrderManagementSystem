@@ -13,10 +13,16 @@ public class Clothing extends Product {
 
 
     @Override
-	public String toString() {
-		return "Clothing [size=" + size + ", color=" + color + "]";
-	}
-
+    public String toString() {
+        return "Clothing [productId=" + getProductId() +
+               ", productName=" + getProductName() +
+               ", description=" + getDescription() +
+               ", price=" + getPrice() +
+               ", quantityInStock=" + getQuantityInStock() +
+               ", type=" + getType() +
+               ", size=" + (size != null ? size : "Not available") +
+               ", color=" + (color != null ? color : "Not available") + "]";
+    }	
 
 	public String getSize() {
         return size;
