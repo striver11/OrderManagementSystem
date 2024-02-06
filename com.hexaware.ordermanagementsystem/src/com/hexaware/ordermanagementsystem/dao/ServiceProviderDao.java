@@ -45,52 +45,52 @@ public class ServiceProviderDao implements IServiceProviderDao {
 	  
 	    
 	@Override
-	public List<Product> getAllProducts() {
-	    List<Product> productList = new ArrayList<>();
+    public List<Product> getAllProducts() {
+        List<Product> productList = new ArrayList<>();
 
-	    try {
-	        con = DBUtil.getDBConn();
-	        String query = "SELECT " +
-	                       "p.productId, p.productName, p.description, p.price, p.quantityInStock, p.type, " +
-	                       "e.brand, e.warrantyPeriod, " +
-	                       "c.size, c.color " +
-	                       "FROM Product p " +
-	                       "LEFT JOIN Electronics e ON p.productId = e.productId " +
-	                       "LEFT JOIN Clothing c ON p.productId = c.productId";
-	        try (PreparedStatement ps = con.prepareStatement(query)) {
-	            try (ResultSet rs = ps.executeQuery()) {
-	                while (rs.next()) {
-	                    int productId = rs.getInt("productId");
-	                    String productName = rs.getString("productName");
-	                    String description = rs.getString("description");
-	                    double price = rs.getDouble("price");
-	                    int quantityInStock = rs.getInt("quantityInStock");
-	                    String type = rs.getString("type");
+        try {
+            con = DBUtil.getDBConn();
+            String query = "SELECT " +
+                           "p.productId, p.productName, p.description, p.price, p.quantityInStock, p.type, " +
+                           "e.brand, e.warrantyPeriod, " +
+                           "c.size, c.color " +
+                           "FROM Product p " +
+                           "LEFT JOIN Electronics e ON p.productId = e.productId " +
+                           "LEFT JOIN Clothing c ON p.productId = c.productId";
+            try (PreparedStatement ps = con.prepareStatement(query)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int productId = rs.getInt("productId");
+                        String productName = rs.getString("productName");
+                        String description = rs.getString("description");
+                        double price = rs.getDouble("price");
+                        int quantityInStock = rs.getInt("quantityInStock");
+                        String type = rs.getString("type");
 
-	                    if ("Electronics".equalsIgnoreCase(type)) {
-	                        String brand = rs.getString("brand");
-	                        int warrantyPeriod = rs.getInt("warrantyPeriod");
-	                        if (brand != null && warrantyPeriod > 0) {
-	                            productList.add(new Electronics(productId, productName, description, price, quantityInStock, type, brand, warrantyPeriod));
-	                        }
-	                    } else if ("Clothing".equalsIgnoreCase(type)) {
-	                        String size = rs.getString("size");
-	                        String color = rs.getString("color");
-	                        if (size != null && color != null) {
-	                            productList.add(new Clothing(productId, productName, description, price, quantityInStock, type, size, color));
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        closeResources();
-	    }
+                        String brand = rs.getString("brand");
+                        int warrantyPeriod = rs.getInt("warrantyPeriod");
+                        String size = rs.getString("size");
+                        String color = rs.getString("color");
 
-	    return productList;
-	}
+                        if ("Electronics".equalsIgnoreCase(type)) {
+                            productList.add(new Electronics(productId, productName, description, price, quantityInStock, type, brand, warrantyPeriod));
+                        } else if ("Clothing".equalsIgnoreCase(type)) {
+                            productList.add(new Clothing(productId, productName, description, price, quantityInStock, type, size, color));
+                        } else {
+                            productList.add(new Product(productId, productName, description, price, quantityInStock, type));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return productList;
+    }
+
 	  
 	  
 
@@ -167,6 +167,8 @@ public class ServiceProviderDao implements IServiceProviderDao {
 	            }
 	        }
 	    }
+	    
+	    
 	    @Override
 	    public void createOrder(int userId, List<Product> products) throws UserNotFoundException, OrderNotFoundException {
 	        try {
